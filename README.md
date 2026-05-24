@@ -1,53 +1,29 @@
 # t1d-celltype-of-action
 
-**Mapping the 145 type 1 diabetes GWAS loci to the pancreatic cell types they likely act in, using cell-type specificity in the HPAP scRNA-seq atlas — and cross-validating those calls against pre-clinical (autoantibody-positive) transcriptional changes.**
+**Mapping 145 type 1 diabetes GWAS loci to the pancreatic cell types they likely act in, using cell-type specificity in the HPAP scRNA-seq atlas — cross-validated against pre-clinical (autoantibody-positive) transcriptional changes.**
 
-Companion to the Substack article: *[Where do type 1 diabetes risk genes actually live?](docs/substack_article.md)*
-
----
+Companion to the Substack article: *Where do type 1 diabetes risk genes actually live?* (`docs/substack_article.md`).
 
 ## TL;DR
 
-- Pulled the 145 independent T1D risk loci from the GWAS Catalog (release v1.0.3.1, May 2026) → 188 candidate genes → 150 testable in the HPAP atlas (222,077 cells, 67 donors).
-- Used the tau specificity index (Yanai et al., 2005) to assign each gene a cell-type-of-action based on healthy expression specificity.
-- **21 of 150 genes received a confident cell-type call:** 7 leukocyte (HLA class II + RUNX3, SH2B3, SLC15A3), 6 duct epithelial (read with caution — see below), 5 acinar (CEL, CTRB1, CTRB2, PGM1, SLC25A37), 2 mesenchymal, 1 endothelial. **Zero confidently beta cell** — a limitation of tau's exclusivity requirement, not an absence of beta-cell biology in the locus set.
-- **The headline result:** the cell-type-of-action calls cross-validate against pre-clinical (AAB-vs-Control) transcriptional changes. Across the 21 confidently-called genes, 20 had a called-cell-type AAB effect larger than the average effect across the other compartments; the omnibus mean called-cell-type advantage of +0.18 log1p exceeded every shuffled mean across 10,000 permutations (p < 10⁻⁴).
-- **Honest caveats:** the cross-validation isn't fully out-of-sample (AAB cells contributed ~14% of the matrix used to compute tau), the permutation null is weaker than ideal (uniform over cell types rather than preserving the marginal of called cell types), and the effect is driven disproportionately by ~5 strong genes (CEL, CTRB1, HLA-DRB1, HLA-DQA1, PLPP1) with the rest weakly consistent.
-
-## Headline figures
-
-### Tau distribution and cell-type-of-action calls
-
-![tau distribution and calls](figures/fig03_tau_distribution_and_calls.png)
-
-Of the 150 testable genes, 34 sat above the expression floor. Of those, 21 had tau ≥ 0.70 (a confident single-compartment call). The other 13 were broadly expressed across compartments. The remaining 116 of the original 150 were below detection in any islet cell type.
-
-### The 21 confident calls, ranked by tau
-
-![confident calls by compartment](figures/fig04_confident_calls_ranked.png)
-
-The leukocyte cluster at the top is the antigen-presentation machinery (HLA class II) plus three lymphocyte-program transcription factors. The acinar cluster is pancreatic digestive enzymes — interpretable in light of the nPOD consortium's finding that T1D pancreata show acinar atrophy. The duct cluster is mixed: CFTR is real biology, but GLIS3, CTSH, and NOTCH2 are independently known beta-cell genes whose duct-call here probably reflects scRNA-seq ambient-mRNA contamination plus tau's preference for the most abundant non-endocrine epithelial compartment.
-
-### Cross-validation against AAB-stage effects
-
-![cross-validation result](figures/fig05_cross_validation.png)
-
-Left panel: histogram of per-gene called-cell-type advantage (called-CT AAB effect minus mean of other CTs) across the 21 confidently-called genes. Right panel: per-gene scatter of called-CT effect vs the largest effect in any other compartment. Genes above the y=x line are cases where the called compartment shows the strongest disease-stage effect; points below the line are cases where some other compartment beats it. The mean across all 21 genes is +0.18 log1p (red dashed line in the histogram), shifting the whole distribution to the right of zero.
-
-Stratified by called cell type, the acinar genes are doing most of the work (mean advantage +0.33 across 5 genes), with leukocyte genes a clear second (+0.17, 7 genes). Duct and mesenchymal calls contribute weakly. The headline result is carried by a minority of strong genes rather than uniformly across the panel — see the article for the longer hedge.
-
----
+- 145 independent T1D risk loci (GWAS Catalog v1.0.3.1) → 188 candidate genes → 150 testable in the HPAP atlas (222,077 cells, 67 donors).
+- Tau cell-type specificity (Yanai 2005) assigns a cell-type-of-action to each gene from healthy expression.
+- **21 of 150 genes received a confident call:** 7 leukocyte, 6 duct epithelial, 5 acinar, 2 mesenchymal, 1 endothelial. Zero beta-cell — a tau exclusivity artifact, not biology.
+- **Headline:** the calls cross-validate. 20/21 confidently-called genes show a larger AAB-vs-Control effect in the called compartment than the mean across other compartments. Mean advantage +0.18 log1p; permutation p < 10⁻⁴.
+- **Caveats kept honest:** AAB contributes ~14% of the matrix used for tau (cross-validation not fully out-of-sample); permutation null is uniform over cell types, not marginal-preserving; effect is carried by ~5 strong genes (CEL, CTRB1, HLA-DRB1, HLA-DQA1, PLPP1).
 
 ## Repository layout
 
 ```
 .
-├── README.md                       this file
-├── LICENSE                         MIT
-├── .gitignore
-├── notebook.ipynb                  cleaned Kaggle notebook (20 cells, final pipeline only)
-├── push_to_github.sh               interactive push helper
-├── code/                           13 modular pipeline scripts (00–12)
+├── src/t1d_coa/             reusable library — config, HPAP client, stats, donors
+│   ├── config.py            paths, thresholds, HPAP endpoint
+│   ├── hpap.py              CellxGene REST + FBS decoder
+│   ├── stats.py             tau, donor-pseudobulk effect, permutation p-value
+│   ├── donors.py            curated HPAP donor metadata
+│   ├── plotting.py          shared compartment colors & axes style
+│   └── provenance.py        append-only sha256 artifact log
+├── scripts/                 13 pipeline steps, runnable in order
 │   ├── 00_env_setup.py
 │   ├── 01_gwas_t1d_filter.py
 │   ├── 02_ld_clumping.py
@@ -61,86 +37,57 @@ Stratified by called cell type, the acinar genes are doing most of the work (mea
 │   ├── 10_cross_validation.py
 │   ├── 11_clinical_metadata.py
 │   └── 12_donor_audit_meg3.py
-├── tools/
-│   ├── make_figures.py             regenerate all 9 article figures
-│   └── make_data.py                regenerate the processed data tables
-├── data/
-│   └── processed/
-│       ├── T1D145_celltype_specificity.tsv
-│       ├── T1D145_celltype_call_crossvalidation.tsv
-│       └── donor_metadata_t1d_aab.tsv
-├── docs/
-│   └── substack_article.md         the article, ready to paste into Substack
-└── figures/
-    ├── fig01_pilot_heatmap_pooled.png
-    ├── fig02_pilot_heatmap_by_disease.png
-    ├── fig03_tau_distribution_and_calls.png
-    ├── fig04_confident_calls_ranked.png
-    ├── fig05_cross_validation.png
-    ├── fig06_leukocyte_by_state.png
-    ├── fig07_beta_t1d_vs_ctrl_bar.png
-    ├── fig08_beta_aab_vs_t1d_scatter.png
-    └── fig09_meg3_per_donor.png
+├── tests/                   pytest unit tests for stats + config
+├── docs/substack_article.md
+├── pyproject.toml
+├── requirements.txt
+└── .github/workflows/ci.yml
 ```
 
-## Reproducing the figures and tables
-
-The figures and processed-data tables in `figures/` and `data/processed/` can be regenerated end-to-end with no external data dependencies:
+## Quick start
 
 ```bash
-pip install pandas numpy matplotlib
-python tools/make_figures.py
-python tools/make_data.py
-```
+# Install
+pip install -e .
 
-The summary statistics that drive these scripts are hard-coded from the original notebook outputs, so anyone can rebuild the article-quality figures locally without re-fetching the HPAP atlas.
+# Optional: HPAP FBS decoder (only needed for full pipeline runs)
+pip install --no-deps cellxgene flatbuffers
 
-## Reproducing the full analysis from raw data
-
-The hard part isn't the analysis, it's loading the data. HPAP's CellxGene instance returns expression payloads as raw FlatBuffers (not Arrow IPC), and the schema isn't documented publicly. The `05_hpap_expression.py` module shows the path that worked: install the `cellxgene` package solely for its `server.common.fbs.matrix.decode_matrix_fbs` helper.
-
-```bash
-# Minimum dependencies
-pip install pandas numpy scipy statsmodels pyarrow httpx tenacity tqdm matplotlib Pillow
-pip install --no-deps cellxgene flatbuffers   # only for the FBS decoder
+# Set project root (defaults to /kaggle/working/t1d_mech if unset)
+export T1D_COA_ROOT=$PWD/workdir
 
 # Run the pipeline
-cd code/
-python 00_env_setup.py
-python 01_gwas_t1d_filter.py
-# ... through 12_donor_audit_meg3.py
+python scripts/00_env_setup.py
+python scripts/01_gwas_t1d_filter.py
+# … through 12_donor_audit_meg3.py
 ```
 
-The pipeline expects ~21 GB of disk space (mostly for the GWAS Catalog bulk TSV and the cached HPAP expression blobs) and runs end-to-end in 30–45 minutes on a Kaggle CPU instance.
+Each script is self-contained, single-purpose, and runs in 30 seconds to a few minutes depending on cache state. Reruns are cheap — every HPAP fetch caches the raw FlatBuffers blob to disk and skips the network round-trip on the next pass.
 
-## Pushing your edits to GitHub
+## Design choices
 
-`push_to_github.sh` is interactive — run it and it'll prompt for username, repository name, and a Personal Access Token. It verifies the token, confirms the repo exists, warns before force-pushing over existing content, and scrubs the token from `.git/config` once the push succeeds. No file ever contains the token.
+**Why a library + scripts split?** The original notebook had the same provenance helper, FBS decoder, and HPAP path constants pasted into five different cells. Moving that to `src/t1d_coa/` means each pipeline step reads like the analysis it performs, not boilerplate.
 
-```bash
-bash push_to_github.sh
-```
+**Why tau and not a fancier specificity metric?** Tau is the standard tissue-specificity index and has a built-in failure mode that's easy to interpret: it under-calls genes that are biologically specific but have non-zero ambient expression elsewhere (the reason zero beta-cell calls land at this threshold). Other indices like the Tau-style Gini variants would recover some of those at the cost of a less interpretable threshold.
+
+**Why donor-pseudobulk and not cell-level mixed models for the headline?** Cell-level LMMs were tested in step 09; they're underpowered for the AAB-vs-Control contrast where the within-donor variance dominates. Donor-pseudobulk Δ log1p is the unit on which both the headline and the permutation null are computed.
 
 ## Data provenance
 
-- **GWAS Catalog:** release v1.0.3.1 (May 2026), filtered to MONDO:0005147 (pure T1D, excluding composite autoimmune-disease studies and T1D nephropathy).
-- **LD reference:** 1000 Genomes Phase 3 EUR panel via the MAGMA bundle, used for PLINK clumping (`--clump-r2 0.1 --clump-kb 1000 --clump-p1 5e-8 --clump-p2 1e-5`).
-- **HPAP atlas:** 222,077 cells from 67 donors, accessed through the Faryabi lab's CellxGene REST API. Underlying dataset: Faryabi et al., *bioRxiv* 2023.01.03.522578.
-- **Clinical metadata:** HPAP Supplementary Table S2 from the same preprint (donor demographics, autoantibody panels, HbA1c, C-peptide, disease duration).
+Every artifact the pipeline writes is logged to `data/PROVENANCE.md` with a sha256 hash and the exact source URL or command that produced it. This is appended automatically — no need to maintain it by hand.
 
-## Limitations the article doesn't fully cover
+- GWAS Catalog: release v1.0.3.1, filtered to pure T1D (excludes composite traits like T1D-nephropathy).
+- LD reference: MAGMA pre-built 1000 Genomes Phase 3 EUR PLINK panel.
+- HPAP atlas: 222,077 cells from 67 donors via the Faryabi lab CellxGene REST endpoint. Underlying dataset: Faryabi et al., *bioRxiv* 2023.01.03.522578.
 
-1. **Tau calls aren't fully out-of-sample for the cross-validation.** The tau matrix pools across all four disease states with cell-count weighting. AAB contributes ~14% of cells; the cross-validation against AAB-vs-Control effects is therefore not strictly out-of-sample. A clean re-run on Control-only cells is the first item on the article's "what I'd want to see" list.
-2. **The permutation null is weaker than ideal.** It picks a uniformly random cell type as "called" from each gene's available cell types, but the empirical distribution of tau calls concentrates in the same compartments where AAB effects are largest. A null that preserved the marginal distribution of called cell types would be a stronger test.
-3. **The effect is driven by ~5 strong genes.** CEL (+0.71), CTRB1 (+0.51), HLA-DRB1 (+0.50), HLA-DQA1 (+0.35), PLPP1 (+0.23) carry the mean; the remaining 16 genes cluster between 0 and +0.15. "20 of 21 genes" should be read as the omnibus passes, not as every individual gene cross-validates.
-4. **T1D beta-cell statistics are underpowered.** 6 of 9 T1D donors have any surviving beta cells at all; HPAP084 (an "Unsuspected" pre-clinical case) contributes 67% of the pool. No FDR-corrected significant hits in beta cells.
-5. **HPAP "leukocyte" isn't infiltrating T cells.** It's resident macrophages plus a smaller mix of other immune cells. The T cell-mediated autoimmune attack that defines T1D is happening in lymph nodes and at the islet edge during a window of disease activity that's mostly closed by the time HPAP donors die.
-6. **Duct compartment calls are a mix of biology and artifact.** See the article's longer hedge.
+## Known limitations
 
-## Citation
-
-If this is useful in your own work, cite the Substack article and this repository together. The methodological contribution — using tau-derived cell-type-of-action calls with a built-in cross-validation against disease-stage data — is what would carry over to other GWAS-and-scRNA pairings.
+1. Tau pools across all disease states, so the cross-validation against AAB-vs-Control is not strictly out-of-sample. A Control-only tau re-run is the first item on the followup list.
+2. The permutation null picks uniformly random cell types; preserving the marginal distribution of called cell types would be a stricter test.
+3. The headline mean is carried by ~5 strong genes. "20 of 21 genes" should be read as the omnibus passes, not as every individual gene cross-validates.
+4. T1D beta-cell statistics are underpowered (6/9 donors have any surviving beta cells; HPAP084 contributes 67%).
+5. The HPAP "leukocyte" bucket is resident macrophages plus a smaller mix of immune cells — not the infiltrating cytotoxic T cells that drive insulitis.
 
 ## License
 
-MIT for the code. The data is third-party (GWAS Catalog, HPAP/PANC-DB) under their respective terms.
+MIT — see `LICENSE`. Underlying data is third-party (GWAS Catalog, HPAP/PANC-DB) under their respective terms.
