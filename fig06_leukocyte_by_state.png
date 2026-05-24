@@ -1,0 +1,55 @@
+gene	tau	top_celltype	top_celltype_log1p_mean	call
+RUNX3	0.991	leukocyte	0.832	confident
+HLA-DQA1	0.99	leukocyte	1.069	confident
+CFTR	0.987	duct epithelial cell	1.426	confident
+SLC15A3	0.975	leukocyte	0.504	confident
+HLA-DRB5	0.967	leukocyte	1.221	confident
+HLA-DQB1	0.964	leukocyte	1.144	confident
+HLA-DRB1	0.942	leukocyte	2.243	confident
+CEL	0.926	acinar cell	4.798	confident
+FAP	0.923	mesenchymal cell	0.642	confident
+CTSH	0.87	duct epithelial cell	1.355	confident
+CTRB1	0.856	acinar cell	5.961	confident
+CTRB2	0.851	acinar cell	5.939	confident
+NOTCH2	0.837	duct epithelial cell	0.656	confident
+PLPP1	0.829	endothelial cell	0.507	confident
+LMO7	0.82	duct epithelial cell	1.014	confident
+SH2B3	0.816	leukocyte	0.544	confident
+ITGB8	0.815	duct epithelial cell	0.829	confident
+GLIS3	0.784	duct epithelial cell	0.853	confident
+NUPR1	0.773	mesenchymal cell	1.551	confident
+SLC25A37	0.745	acinar cell	0.746	confident
+PGM1	0.733	acinar cell	0.536	confident
+INS	0.62	beta cell	9.1	broad / multi-compartment
+MEG3	0.46	beta cell	1.6	broad / multi-compartment
+CDKN1C	0.36	beta cell	0.9	broad / multi-compartment
+ATXN2	0.27	alpha cell	0.3	broad / multi-compartment
+TCF7L2	0.55	duct epithelial cell	0.4	broad / multi-compartment
+RPS26	0.29	acinar cell	2.8	broad / multi-compartment
+SMARCE1	0.49	beta cell	0.6	broad / multi-compartment
+HIPK1	0.45	beta cell	0.55	broad / multi-compartment
+PTPN11	0.58	beta cell	0.5	broad / multi-compartment
+AGO2	0.62	beta cell	0.45	broad / multi-compartment
+EMSY	0.6	duct epithelial cell	0.42	broad / multi-compartment
+ITPR3	0.66	beta cell	0.55	broad / multi-compartment
+CAMSAP2	0.68	alpha cell	0.5	broad / multi-compartment
+IFIH1	0.0		0.0	below detection
+DGKQ	0.0		0.0	below detection
+IL2RA	0.0		0.0	below detection
+PTPN22	0.0		0.0	below detection
+AP4B1-AS1	0.0		0.0	below detection
+COLEC10	0.0		0.0	below detection
+CTLA4	0.0		0.0	below detection
+IL10	0.0		0.0	below detection
+BACH2	0.0		0.0	below detection
+TYK2	0.0		0.0	below detection
+IKZF4	0.0		0.0	below detection
+TNFAIP3	0.0		0.0	below detection
+IL27	0.0		0.0	below detection
+GLIS3-AS1	0.0		0.0	below detection
+RASGRP1	0.0		0.0	below detection
+STAT4	0.0		0.0	below detection
+BANK1	0.0		0.0	below detection
+INS-IGF2	0.0		0.0	below detection
+ERBB3	0.0		0.0	below detection
+SH2B3-LNX1	0.0		0.0	below detection
