@@ -1,0 +1,41 @@
+PLINK v1.90b7.2 64-bit (11 Dec 2023)
+Options in effect:
+  --bfile /kaggle/working/t1d_mech/reference/g1000_eur
+  --clump /kaggle/working/t1d_mech/data/interim/t1d_clump_input.tsv
+  --clump-field P
+  --clump-kb 1000
+  --clump-p1 5e-8
+  --clump-p2 1e-5
+  --clump-r2 0.1
+  --clump-snp-field SNP
+  --out /kaggle/working/t1d_mech/data/interim/t1d_clumped
+
+Hostname: 31c83a7387bb
+Working directory: /kaggle/working
+Start time: Sat May 23 22:05:31 2026
+
+Random number seed: 1779573931
+32103 MB RAM detected; reserving 16051 MB for main workspace.
+22665064 variants loaded from .bim file.
+503 people (240 males, 263 females) loaded from .fam.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 503 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is in [0.9999995, 1).
+22665064 variants and 503 people pass filters and QC.
+Note: No phenotypes present.
+Warning: 'rs75793288' is missing from the main dataset, and is a top variant.
+Warning: 'rs1329764748' is missing from the main dataset, and is a top variant.
+Warning: 'rs527381367' is missing from the main dataset, and is a top variant.
+Warning: 'rs537938132' is missing from the main dataset, and is a top variant.
+Warning: 'rs570794153' is missing from the main dataset, and is a top variant.
+Warning: 'rs2250903' is missing from the main dataset, and is a top variant.
+Warning: 'rs78896587' is missing from the main dataset, and is a top variant.
+Warning: 'rs5790666' is missing from the main dataset, and is a top variant.
+Warning: 'rs113935429' is missing from the main dataset, and is a top variant.
+Warning: 'rs3757787' is missing from the main dataset, and is a top variant.
+Warning: 'rs766751473' is missing from the main dataset, and is a top variant.
+--clump: 145 clumps formed from 257 top variants.
+Results written to /kaggle/working/t1d_mech/data/interim/t1d_clumped.clumped .
+
+End time: Sat May 23 22:05:48 2026
