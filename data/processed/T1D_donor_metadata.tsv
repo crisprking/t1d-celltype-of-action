@@ -1,0 +1,10 @@
+donor_id	age	sex	ancestry	BMI	HbA1c	disease_duration	c_peptide_ngml	clinical_class	n_beta_cells	n_cells_total
+HPAP021	13	Female	Caucasian	21.4		7 years	0.02	Established T1D	2	4410
+HPAP023	17	Female	Caucasian	21.35	8.9	7 years	0.02	Established T1D	2	864
+HPAP028	4	Male	Caucasian	17.3	9.8	Unsuspected	0.3	Unsuspected (undiagnosed pre-mortem)	0	2371
+HPAP032	10	Female	Caucasian	16.3	9.0	3 years	0.02	Established T1D	0	2352
+HPAP055	24	Male	Hispanic	27.9	10.4	7 years	0.02	Established T1D	91	2001
+HPAP064	24	Male	African American	16.98	13.0	Unsuspected	0.25	Unsuspected (undiagnosed pre-mortem)	138	2071
+HPAP071	12	Female	Caucasian	15.42	9.8	Unsuspected	0.06	Unsuspected (undiagnosed pre-mortem)	6	2409
+HPAP084	12	Female	Caucasian	18.5	13.3	Unsuspected	2.2	Unsuspected, preserved C-peptide	476	2351
+HPAP087	15	Female	Caucasian	19.3	10.4	6-10 years	0.02	Established T1D	0	11288
